@@ -6,10 +6,11 @@
     "dev": "concurrently -k -s first \"vite --port 3000\" \"npm run tsc:watch:electron\" \"npm run electron\"",
     "build": "npm run electron:builder",
     "compile": "vite build && npm run tsc:electron",
-    "electron": "wait-on tcp:127.0.0.1:3000 && cross-env IS_DEV=true electron .",
+    "electron": "wait-on tcp:localhost:3000 && cross-env IS_DEV=true electron .",
     "tsc:electron": "cd src/electron && tsc",
-    "tsc:watch:electron": "cd src/electron && tsc -w",
+    "tsc:watch:electron": "cd src/electron && tsc -w --preserveWatchOutput true",
     "electron:builder": "electron-builder",
+    "pretsc:electron": "mkdirp dist/compiled/ -p && cp -rT ./i18n dist/compiled/i18n/",
     "prebuild": "npm run compile",
     "predev": "npm run tsc:electron"
   },
@@ -19,13 +20,19 @@
     ]
   },
   "dependencies": {
+    "d3": "^7.8.2",
     "i18next": "^21.10.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "uuid": "^9.0.0",
+    "websocket": "^1.0.34"
   },
   "devDependencies": {
+    "@types/d3": "^7.4.0",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
+    "@types/uuid": "^9.0.1",
+    "@types/websocket": "^1.0.5",
     "@vitejs/plugin-react": "^3.1.0",
     "concurrently": "^7.6.0",
     "cross-env": "^7.0.3",

@@ -3,9 +3,12 @@ import { app, BrowserWindow, Menu, MenuItem } from 'electron';
 import i18n from './i18next.config';
 import * as menuActionMap from './menu';
 import { ipcMain } from 'electron/main';
-
+import { startWebSocketRelay } from './lib/WebSocketRelay';
 
 const isDev = process.env.IS_DEV == "true" ? true : false;
+
+console.log('ELECTRON');
+startWebSocketRelay();
 
 function createMenu(): Menu | null {
   if (!isDev) return null;
@@ -54,7 +57,7 @@ function createWindow() {
   // win.loadFile("index.html");
   mainWindow.loadURL(
     isDev
-      ? 'http://localhost:3001'
+      ? 'http://localhost:3000'
       : `file://${path.join(__dirname, '../src/index.html')}`
   );
 
@@ -73,6 +76,8 @@ function createWindow() {
 app.whenReady().then(async () => {
 
   const mainWindow = createWindow();
+
+  
 
   mainWindow.webContents.once('did-finish-load', () => {
     mainWindow.webContents.send('set-language', i18n.language);
@@ -110,3 +115,4 @@ ipcMain.handle('soft-reload', () => {
   BrowserWindow.getAllWindows().forEach(window => window.close());
   createWindow();
 })
+
