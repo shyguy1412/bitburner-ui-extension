@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "outDir": "../../dist/compiled/tsc",
+    "target": "esnext",
+    "useDefineForClassFields": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "strict": true,
+    "jsx": "preserve",
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "lib": ["esnext", "dom", "dom.iterable"],
+    "baseUrl": "../",
+    "paths": {
+      "@/*": ["public/*"]
+    }
+  },
+  "include": ["./**/*.ts*"]
+}

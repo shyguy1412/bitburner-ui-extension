@@ -1,0 +1,49 @@
+{
+  "name": "electron-template",
+  "version": "0.0.1",
+  "main": "dist/compiled/electron/main.js",
+  "scripts": {
+    "dev": "concurrently -k -s first \"vite --port 3000\" \"npm run tsc:watch:electron\" \"npm run electron\"",
+    "build": "npm run electron:builder",
+    "compile": "vite build && npm run tsc:electron",
+    "electron": "wait-on tcp:127.0.0.1:3000 && cross-env IS_DEV=true electron .",
+    "tsc:electron": "cd src/electron && tsc",
+    "tsc:watch:electron": "cd src/electron && tsc -w",
+    "electron:builder": "electron-builder",
+    "prebuild": "npm run compile",
+    "predev": "npm run tsc:electron"
+  },
+  "build": {
+    "files": [
+      "./dist/compiled/**/*"
+    ]
+  },
+  "dependencies": {
+    "i18next": "^21.10.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.28",
+    "@types/react-dom": "^18.0.11",
+    "@vitejs/plugin-react": "^3.1.0",
+    "concurrently": "^7.6.0",
+    "cross-env": "^7.0.3",
+    "electron": "^23.1.4",
+    "electron-builder": "^24.0.0",
+    "typescript": "^5.0.2",
+    "vite": "^4.2.0",
+    "wait-on": "^7.0.1"
+  },
+  "author": "Nils Ramstöck",
+  "description": "A Template for Electron Apps with React",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NilsRamstoeck/electron-template.git"
+  },
+  "bugs": {
+    "url": "https://github.com/NilsRamstoeck/electron-template/issues"
+  },
+  "homepage": "https://github.com/NilsRamstoeck/electron-template#readme"
+}

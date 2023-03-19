@@ -1,0 +1,11 @@
+{
+    "meta":{
+        "name": "English",
+        "native_name": "English"
+    },
+    "menu": {
+        "Dev": "Dev",
+        "Toggle Developer Tools": "Toggle Developer Tools",
+        "Reload": "Reload"
+    }
+}
