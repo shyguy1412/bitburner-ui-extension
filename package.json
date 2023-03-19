@@ -1,5 +1,5 @@
 {
-  "name": "electron-template",
+  "name": "bitburner-ui-extension",
   "version": "0.0.1",
   "main": "dist/compiled/electron/main.js",
   "scripts": {
@@ -40,10 +40,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/NilsRamstoeck/electron-template.git"
+    "url": "git+https://github.com/NilsRamstoeck/bitburner-ui-extension.git"
   },
   "bugs": {
-    "url": "https://github.com/NilsRamstoeck/electron-template/issues"
+    "url": "https://github.com/NilsRamstoeck/bitburner-ui-extension/issues"
   },
-  "homepage": "https://github.com/NilsRamstoeck/electron-template#readme"
+  "homepage": "https://github.com/NilsRamstoeck/bitburner-ui-extension#readme"
 }
