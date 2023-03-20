@@ -1,17 +1,20 @@
 import { BitBurnerClient } from '@/lib/BitBurnerClient';
 import '@/style/App.css';
+import { useEffect } from 'react';
 import { NetworkGraph } from './NetworkGraph';
 
 export function App() {
 
-  const bitburnerClient = new BitBurnerClient();
-
-  console.log(bitburnerClient);
+  useEffect(() => {
+    return () => {
+      BitBurnerClient.close();
+    }
+  })  
 
   return <>
-    {/* <div style={{ position: 'relative' }} id="my_dataviz"></div> */}
     <NetworkGraph
-      serverClicked={(path) => bitburnerClient.connectToServer(path)}
+      // client={client}
+      serverClicked={(path) => BitBurnerClient.connectToServer(path)}
     ></NetworkGraph>
   </>
 }
