@@ -1,9 +1,42 @@
 import { BitBurnerSocket } from "./BitBurnerSocket";
 
-type NetworkData = [
-  string,
-  string[]
-][]
+type NetworkData = BitburnerServer[]
+
+type BitburnerServer = {
+  connections: string[],
+  contracts: any[],
+  cpuCores: number,
+  ftpPortOpen: boolean,
+  hasAdminRights: boolean,
+  hostname: string,
+  httpPortOpen: boolean,
+  ip: string,
+  isConnectedTo: boolean,
+  maxRam: number,
+  messages: any[],
+  organizationName: string,
+  programs: any[],
+  ramUsed: number,
+  runningScripts: string[],
+  scripts: string[],
+  serversOnNetwork: any[],
+  smtpPortOpen: boolean,
+  sqlPortOpen: boolean,
+  sshPortOpen: boolean,
+  textFiles: string[],
+  purchasedByPlayer: boolean,
+  backdoorInstalled: boolean,
+  baseDifficulty: number,
+  hackDifficulty: number,
+  minDifficulty: number,
+  moneyAvailable: number,
+  moneyMax: number,
+  numOpenPortsRequired: number,
+  openPortCount: number,
+  requiredHackingSkill: number,
+  serverGrowth: number
+}
+
 
 type BitBurnerAction = {
   action: string,

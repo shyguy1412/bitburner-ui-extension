@@ -42,10 +42,10 @@ function drag(simulation: any) {
 
 function getGraphData(network: Awaited<ReturnType<typeof BitBurnerClient['getNetworkData']>>) {
   const nodes = network
-    .map(([server], index) => ({ id: index, name: server as string }))
+    .map(({hostname}, index) => ({ id: index, name: hostname }))
 
   const links = network
-    .flatMap(([_, connections], serverIndex) =>
+    .flatMap(({connections}, serverIndex) =>
       (connections as string[])
         .map((connection) => ({ source: serverIndex, target: nodes.find(el => el.name == connection)?.id ?? 0 }))
     )
