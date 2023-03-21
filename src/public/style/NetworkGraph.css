@@ -1,3 +1,12 @@
 .network-node:hover{
-  stroke: black;
+  stroke: var(--white);
+}
+
+.network-node{
+  fill: var(--secondarydark);
+  stroke: var(--error);
+}
+
+.network-node.root{
+  stroke: var(--success);
 }

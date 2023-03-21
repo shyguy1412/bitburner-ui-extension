@@ -44,14 +44,14 @@ function getGraphData(network: Awaited<ReturnType<typeof BitBurnerClient['getNet
 
   //filter own servers. will be displayed elsewhere cause there are potentionally way too many
   const filteredNetwork = network.filter(server => !server.purchasedByPlayer || server.hostname == 'home');
-  
+
   const nodes = filteredNetwork
-    .map(({hostname}, index) => ({ id: index, name: hostname }))
+    .map((node, index) => ({ id: index, ...node }))
 
   const links = filteredNetwork
-    .flatMap(({connections}, serverIndex) =>
+    .flatMap(({ connections }, serverIndex) =>
       (connections as string[])
-        .map((connection) => ({ source: serverIndex, target: nodes.find(el => el.name == connection)?.id ?? 0 }))
+        .map((connection) => ({ source: serverIndex, target: nodes.find(el => el.hostname == connection)?.id ?? 0 }))
     )
 
   const graphData = { nodes, links };
@@ -68,7 +68,7 @@ function findPathToServer(network: GraphData, target: number) {
 
   //find all connected nodes
   const visited = new Set<Number>();
-  const startNode = network.nodes.find(node => node.name == 'home')!.id;
+  const startNode = network.nodes.find(node => node.hostname == 'home')!.id;
 
   if (target == startNode) return [];
 
@@ -94,7 +94,7 @@ function findPathToServer(network: GraphData, target: number) {
   }
 
   const path = explore(startNode);
-  return path.map(nodeId => network.nodes.find(node => node.id == nodeId)!.name);
+  return path.map(nodeId => network.nodes.find(node => node.id == nodeId)!.hostname);
 }
 
 export function NetworkGraph({ serverClicked }: Props) {
@@ -109,11 +109,13 @@ export function NetworkGraph({ serverClicked }: Props) {
       document.getElementById('network-graph-svg-wrapper')!.innerHTML = '';
 
       const network = await BitBurnerClient.getNetworkData();
+      console.log(network);
+
       const graphData = getGraphData(network);
       const width = 600;
       const height = 400;
 
-      const homeNode = graphData.nodes.find(node => node.name == 'home')! as any;
+      const homeNode = graphData.nodes.find(node => node.hostname == 'home')! as any;
       homeNode.fx = width / 2;
       homeNode.fy = height / 2;
 
@@ -153,7 +155,7 @@ export function NetworkGraph({ serverClicked }: Props) {
         .data(graphData.links)
         .enter()
         .append("line")
-        .style("stroke", "#aaa")
+        .style("stroke", "var(--secondarylight)")
 
 
       // Initialize the nodes
@@ -163,9 +165,8 @@ export function NetworkGraph({ serverClicked }: Props) {
         .enter()
         .append("circle")
         .attr("r", 10)
-        .style("fill", "#69b3a2")
-        .attr("class", "network-node")
-        .on('mouseover', (event, d) => { setShowTooltip(true), setCurrentServerData(d) })
+        .attr("class", (d) => `network-node ${d.hasAdminRights ? 'root' : ''}`)
+        .on('mouseover', (event, d) => { console.log(d); setShowTooltip(true); setCurrentServerData(d) })
         .on('mouseleave', () => setShowTooltip(false))
         .on('click', async (env, d) => serverClicked(findPathToServer(getGraphData(network), d.id)))
         .call(drag(simulation) as any)

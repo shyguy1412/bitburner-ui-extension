@@ -11,6 +11,7 @@ export function Tooltip({ children, show, parent }: Props) {
   useEffect(() => {
     function followMouse(ev: MouseEvent) {
       try {
+        if(!show)return;
         const bounds = parent.getBoundingClientRect();
         setPos({
           x: ev.clientX - bounds.x,

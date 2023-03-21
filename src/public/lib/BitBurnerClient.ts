@@ -1,3 +1,4 @@
+import { v4 } from "uuid";
 import { BitBurnerSocket } from "../../lib/BitBurnerSocket";
 
 type NetworkData = BitburnerServer[]
@@ -43,77 +44,61 @@ type BitBurnerAction = {
   params?: string[]
 }
 
+function data(ev: MessageEvent) {
+  return JSON.parse(ev.data);
+}
+
 class BitBurnerClientSocket extends BitBurnerSocket {
+
+  createSocket(type: string): WebSocket {
+    const socket = super.createSocket(type);
+    socket.addEventListener('message', ({ data }) => {
+      const { uuid, ...detail } = JSON.parse(data);
+      if (uuid) socket.dispatchEvent(new CustomEvent(uuid, { detail }))
+    });
+    return socket;
+  }
+
   connectToServer(path: string[]) {
     this.sendAction({ action: 'connect', params: path });
   }
 
-  sendAction(action: BitBurnerAction) {
-    if (this.socket.readyState == this.socket.OPEN)
-      this.socket.send(JSON.stringify(action));
-    else
-      this.once('open', () => this.socket.send(JSON.stringify(action)))
+  async sendAction(action: BitBurnerAction) {
+    const uuid = v4();
+    return new Promise(async resolve => {
+      if (this.socket.readyState == this.socket.OPEN)
+        this.send({ uuid, ...action });
+      else
+        this.once('open', async () => this.send({ uuid, ...action }));
+
+      this.once(uuid as any, (({detail}:CustomEvent) => resolve(detail.data))as EventListener);
+    })
   }
 
   async getNetworkData(): Promise<NetworkData> {
-    return new Promise(resolve => {
-      this.once('message', (ev) => { resolve(JSON.parse(ev.data)) })
-      this.sendAction({ action: 'scan-network' })
+    return await this.sendAction({ action: 'scan-network' }) as NetworkData;
+    // return new Promise(resolve => {
+    //   this.once('message', (ev) => { resolve(data(ev)) })
+    //   this.sendAction({ action: 'scan-network' })
+    // })
+  }
+
+  async loadTheme() {
+    const theme = await this.sendAction({ action: 'ns-function', params: ['ui.getTheme'] }) as { [key: string]: string };
+    console.log('LOADING THEME');
+    Object.entries(theme).forEach(([key, value]) => {
+      document.body.style.setProperty(`--${key}`, value);
     })
+
+    // this.once('message', ev => {
+    //   console.log('RECEIVED THEME', ev);
+
+    //   Object.entries<string>(data(ev)).forEach(([key, value]) => {
+    //     document.body.style.setProperty(`--${key}`, value);
+    //   })
+    // });
+    // this.sendAction({ action: 'ns-function', params: ['ui.getTheme'] })
   }
 }
 
 export const BitBurnerClient = new BitBurnerClientSocket('extension');
-
-// import { EventHandler } from "react";
-
-// const BITBURNER_PORT = 9810
-
-
-// type BitBurnerClientEvent = 'message' | 'open';
-
-
-// export const BitBurnerClient = {
-//   socket: (() => {
-//     const socket = new WebSocket('ws:/localhost:' + BITBURNER_PORT);
-
-//     return socket;
-//   })(),
-//   // eventTarget: new EventTarget(),
-
-//   once<K extends keyof WebSocketEventMap>(event: K, handler: (ev: CustomEvent) => void) {
-//     const listener = ((ev: CustomEvent) => {
-//       handler(ev);
-//       this.socket.removeEventListener(event, listener);
-//     }) as EventListener
-
-//     this.socket.addEventListener(event, listener);
-//   },
-
-//   on<K extends keyof WebSocketEventMap>(event: K, handler: (ev: CustomEvent) => void) {
-//     this.socket.addEventListener(event, handler as EventListener);
-//   },
-
-// connectToServer(path: string[]) {
-//   // console.log(path);
-//   this.sendAction({ action: 'connect', params: path });
-// },
-
-// sendAction(action: BitBurnerAction) {
-//   if (this.socket.readyState == this.socket.OPEN)
-//     this.socket.send(JSON.stringify(action));
-//   else
-//     this.once('open', () => this.socket.send(JSON.stringify(action)))
-//   console.log(this.socket.OPEN);
-
-// },
-
-//   async getNetworkData(): Promise < NetworkData > {
-//   return new Promise(resolve => {
-//     this.once('message', (ev) => { resolve(ev.detail.message) })
-//     this.sendAction({ action: 'scan-network' })
-//   })
-// }
-// }
-
-// BitBurnerClient.on('message', (message) => console.log('WS Received: ', message))
