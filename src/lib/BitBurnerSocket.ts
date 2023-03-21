@@ -4,24 +4,24 @@ export class BitBurnerSocket {
   socket: WebSocket;
   closed: boolean;
 
-  constructor() {
-    console.log('SOCKET CREATED');
+  createSocket(type:string) {
+    const socket = new WebSocket('ws://localhost:' + BITBURNER_PORT);
 
-    this.socket = new WebSocket('ws://localhost:' + BITBURNER_PORT);
-    this.closed = false;
-
-    this.once('open', () => {
-      this.send('extension');
+    socket.addEventListener('open', () => {
+      socket.send(type);
     })
 
-    this.on('close', () => {
-      if (this.closed) console.log('SOCKET CLOSED');
-
-      if (this.closed) return;
+    socket.addEventListener('error', () => {
       setTimeout(() => {
-        this.socket = new WebSocket('ws://localhost:' + BITBURNER_PORT);
+        this.socket = this.createSocket(type);
       }, 200);
     })
+    return socket;
+  }
+
+  constructor(type:string) {
+    this.closed = false;
+    this.socket = this.createSocket(type);
   }
 
   on<K extends keyof WebSocketEventMap>(event: K, handler: (ev: WebSocketEventMap[K]) => void) {
@@ -44,7 +44,7 @@ export class BitBurnerSocket {
   send(data: any) {
     if (this.socket.readyState == this.socket.OPEN)
       this.socket.send(JSON.stringify(data));
-    // else
-      // this.once('open', () => this.socket.send(JSON.stringify(data)))
+    else
+      this.once('open', () => this.socket.send(JSON.stringify(data)))
   }
 }

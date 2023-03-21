@@ -1,4 +1,4 @@
-import { BitBurnerSocket } from "./BitBurnerSocket";
+import { BitBurnerSocket } from "../../lib/BitBurnerSocket";
 
 type NetworkData = BitburnerServer[]
 
@@ -63,7 +63,7 @@ class BitBurnerClientSocket extends BitBurnerSocket {
   }
 }
 
-export const BitBurnerClient = new BitBurnerClientSocket();
+export const BitBurnerClient = new BitBurnerClientSocket('extension');
 
 // import { EventHandler } from "react";
 

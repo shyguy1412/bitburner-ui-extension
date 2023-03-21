@@ -10,11 +10,13 @@ export function Tooltip({ children, show, parent }: Props) {
 
   useEffect(() => {
     function followMouse(ev: MouseEvent) {
-      const bounds = parent.getBoundingClientRect();
-      setPos({
-        x: ev.clientX - bounds.x,
-        y: ev.clientY - bounds.y,
-      })
+      try {
+        const bounds = parent.getBoundingClientRect();
+        setPos({
+          x: ev.clientX - bounds.x,
+          y: ev.clientY - bounds.y,
+        })
+      } catch (_) { }
     }
 
     document.addEventListener('mousemove', followMouse);

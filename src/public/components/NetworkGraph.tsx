@@ -41,10 +41,14 @@ function drag(simulation: any) {
 
 
 function getGraphData(network: Awaited<ReturnType<typeof BitBurnerClient['getNetworkData']>>) {
-  const nodes = network
+
+  //filter own servers. will be displayed elsewhere cause there are potentionally way too many
+  const filteredNetwork = network.filter(server => !server.purchasedByPlayer || server.hostname == 'home');
+  
+  const nodes = filteredNetwork
     .map(({hostname}, index) => ({ id: index, name: hostname }))
 
-  const links = network
+  const links = filteredNetwork
     .flatMap(({connections}, serverIndex) =>
       (connections as string[])
         .map((connection) => ({ source: serverIndex, target: nodes.find(el => el.name == connection)?.id ?? 0 }))
@@ -104,15 +108,8 @@ export function NetworkGraph({ serverClicked }: Props) {
 
       document.getElementById('network-graph-svg-wrapper')!.innerHTML = '';
 
-      console.log('REQUEST NETWORK DATA');
-
       const network = await BitBurnerClient.getNetworkData();
-
-      console.log('NETWORK: ', network);
-
-
       const graphData = getGraphData(network);
-
       const width = 600;
       const height = 400;
 
@@ -129,8 +126,8 @@ export function NetworkGraph({ serverClicked }: Props) {
           .strength(2)
         )
         .force("charge", d3.forceManyBody().strength(-1000))
-        .force('forceX', d3.forceX(width / 2).strength(1.5))
-        .force('forceY', d3.forceY(height / 2).strength(3))
+        .force('forceX', d3.forceX(width / 2).strength(1.2))
+        .force('forceY', d3.forceY(height / 2).strength(2))
         .on("tick", () => {
           if (Date.now() < time + 1000) return;
           node
