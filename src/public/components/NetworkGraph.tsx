@@ -183,7 +183,13 @@ export function NetworkGraph({ serverClicked }: Props) {
         show={showTooltip}
         parent={ref.current!}
       >
-        <p>Server: {currentServerData?.name ?? ''}</p>
+        <p><span>Server: </span><span>{`${currentServerData?.hostname} (${currentServerData?.ip})` ?? ''}</span></p>
+        <p><span>HTTP: </span><span>{currentServerData?.httpPortOpen ? 'open' : 'closed'}</span></p>
+        <p><span>SSH: </span><span>{currentServerData?.sshPortOpen ? 'open' : 'closed'}</span></p>
+        <p><span>FTP: </span><span>{currentServerData?.ftpPortOpen ? 'open' : 'closed'}</span></p>
+        <p><span>SQL: </span><span>{currentServerData?.sqlPortOpen ? 'open' : 'closed'}</span></p>
+        <p><span>SMTP: </span><span>{currentServerData?.smtpPortOpen ? 'open' : 'closed'}</span></p>
+        <p><span>root: </span><span>{currentServerData?.hasAdminRights ? 'yes' : 'no'}</span></p>
       </Tooltip>
       <div id="network-graph-svg-wrapper">
       </div>
