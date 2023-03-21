@@ -4,22 +4,23 @@ export class BitBurnerSocket {
   socket: WebSocket;
   closed: boolean;
 
-  createSocket(type:string) {
+  createSocket(type: string) {
     const socket = new WebSocket('ws://localhost:' + BITBURNER_PORT);
 
     socket.addEventListener('open', () => {
       socket.send(type);
-    })
+    });
 
     socket.addEventListener('error', () => {
       setTimeout(() => {
         this.socket = this.createSocket(type);
       }, 200);
-    })
+    });
+
     return socket;
   }
 
-  constructor(type:string) {
+  constructor(type: string) {
     this.closed = false;
     this.socket = this.createSocket(type);
   }

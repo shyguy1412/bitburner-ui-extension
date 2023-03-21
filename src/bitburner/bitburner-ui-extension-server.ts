@@ -9,8 +9,8 @@ export function main(netscript: NS) {
     netscript.tprint('Connection Established');
   })
 
-  BitBurnerClient.on('message', (message) => {
-    const { action, params } = JSON.parse(message.data) as { action: string, params: string[] };
+  BitBurnerClient.on('message', async (message) => {
+    const { uuid, action, params } = JSON.parse(message.data) as { uuid:string, action: string, params: string[] };
     console.log(message);
     if (!action) return;
 
@@ -20,10 +20,15 @@ export function main(netscript: NS) {
       .join('');
 
     console.log(actionMap, actionIndex);
-    
+
 
     if (Object.hasOwn(actionMap, actionIndex)) {
-      actionMap[actionIndex as keyof typeof actionMap](netscript, params);
+      const result = await actionMap[actionIndex as keyof typeof actionMap](netscript, params);
+      BitBurnerClient.send({
+        uuid,
+        action,
+        data: result
+      })
     }
   })
 
