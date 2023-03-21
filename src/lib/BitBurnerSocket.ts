@@ -33,7 +33,7 @@ export class BitBurnerSocket {
       handler(ev);
       this.socket.removeEventListener(event, onceHandler as EventListener);
     }
-    this.socket.addEventListener(event, handler as EventListener);
+    this.socket.addEventListener(event, onceHandler as EventListener);
   }
 
   close(code?: number, reason?: string) {
