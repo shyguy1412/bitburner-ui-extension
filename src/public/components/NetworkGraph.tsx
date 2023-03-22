@@ -145,8 +145,8 @@ export function NetworkGraph({ serverClicked }: Props) {
 
       const svg = d3.select("#network-graph-svg-wrapper")
         .append("svg")
-        .attr("width", width)
-        .attr("height", height)
+          // .attr("width", width)
+          // .attr("height", height)
         .attr("viewBox", `0 0 ${width} ${height}`)
         .append("g")
 
@@ -166,7 +166,7 @@ export function NetworkGraph({ serverClicked }: Props) {
         .append("circle")
         .attr("r", 10)
         .attr("class", (d) => `network-node ${d.hasAdminRights ? 'root' : ''}`)
-        .on('mouseover', (event, d) => { console.log(d); setShowTooltip(true); setCurrentServerData(d) })
+        .on('mouseover', (event, d) => {setShowTooltip(true); setCurrentServerData(d) })
         .on('mouseleave', () => setShowTooltip(false))
         .on('click', async (env, d) => serverClicked(findPathToServer(getGraphData(network), d.id)))
         .call(drag(simulation) as any)
