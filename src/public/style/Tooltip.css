@@ -21,6 +21,7 @@
   display: grid;
   grid-auto-columns: 70px auto;
   gap: 5px;
+  white-space: nowrap;
 }
 
 .tooltip p span {

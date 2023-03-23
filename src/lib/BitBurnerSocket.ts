@@ -11,7 +11,9 @@ export class BitBurnerSocket {
       socket.send(type);
     });
 
-    socket.addEventListener('error', () => {
+    socket.addEventListener('close', (ev) => {
+      console.log(ev.code);
+      if (this.closed || ev.code == 1000) return;
       setTimeout(() => {
         this.socket = this.createSocket(type);
       }, 200);

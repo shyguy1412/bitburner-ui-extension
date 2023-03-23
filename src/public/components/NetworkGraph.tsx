@@ -97,11 +97,23 @@ function findPathToServer(network: GraphData, target: number) {
   return path.map(nodeId => network.nodes.find(node => node.id == nodeId)!.hostname);
 }
 
+type moveProxy = {
+  listeners: ((ev: MouseEvent) => void)[],
+  trigger: (ev: MouseEvent) => void,
+  onTrigger: (listener: (ev: MouseEvent) => void) => void
+}
+
 export function NetworkGraph({ serverClicked }: Props) {
 
   const [showTooltip, setShowTooltip] = useState<boolean>(false);
   const [currentServerData, setCurrentServerData] = useState<ServerData>();
   const ref = useRef<HTMLDivElement>();
+
+  const moveProxy: moveProxy = {
+    listeners: [],
+    trigger(event) { this.listeners.forEach(listener => listener(event)) },
+    onTrigger(listener) { this.listeners.push(listener) }
+  }
 
   useEffect(() => {
     (async function () {
@@ -109,7 +121,6 @@ export function NetworkGraph({ serverClicked }: Props) {
       document.getElementById('network-graph-svg-wrapper')!.innerHTML = '';
 
       const network = await BitBurnerClient.getNetworkData();
-      console.log(network);
 
       const graphData = getGraphData(network);
       const width = 600;
@@ -145,8 +156,8 @@ export function NetworkGraph({ serverClicked }: Props) {
 
       const svg = d3.select("#network-graph-svg-wrapper")
         .append("svg")
-          // .attr("width", width)
-          // .attr("height", height)
+        // .attr("width", width)
+        // .attr("height", height)
         .attr("viewBox", `0 0 ${width} ${height}`)
         .append("g")
 
@@ -166,7 +177,8 @@ export function NetworkGraph({ serverClicked }: Props) {
         .append("circle")
         .attr("r", 10)
         .attr("class", (d) => `network-node ${d.hasAdminRights ? 'root' : ''}`)
-        .on('mouseover', (event, d) => {setShowTooltip(true); setCurrentServerData(d) })
+        .on('mouseover', (ev, d) => { setShowTooltip(true); setCurrentServerData(d); moveProxy.trigger(ev) })
+        .on('mousemove', (ev) => moveProxy.trigger(ev))
         .on('mouseleave', () => setShowTooltip(false))
         .on('click', async (env, d) => serverClicked(findPathToServer(getGraphData(network), d.id)))
         .call(drag(simulation) as any)
@@ -174,14 +186,17 @@ export function NetworkGraph({ serverClicked }: Props) {
         .attr("cy", height / 2);
 
     })();
+    console.log(ref);
+    
   }, []);
 
 
   return <>
-    <div ref={ref as LegacyRef<HTMLDivElement>} style={{ position: 'relative' }}>
+    <div className='network-graph' ref={ref as LegacyRef<HTMLDivElement>}>
       <Tooltip
         show={showTooltip}
-        parent={ref.current!}
+        parent={ref}
+        onMove={(listener) => moveProxy.onTrigger(listener)}
       >
         <p><span>Server: </span><span>{`${currentServerData?.hostname} (${currentServerData?.ip})` ?? ''}</span></p>
         <p><span>HTTP: </span><span>{currentServerData?.httpPortOpen ? 'open' : 'closed'}</span></p>

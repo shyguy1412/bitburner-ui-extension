@@ -33,7 +33,7 @@ export function main(netscript: NS) {
   })
 
   netscript.atExit(() => BitBurnerClient.close());
-  BitBurnerClient.once('close', () => netscript.exit());
+  // BitBurnerClient.once('close', () => netscript.exit());
 
   return new Promise(resolve => { });
 }

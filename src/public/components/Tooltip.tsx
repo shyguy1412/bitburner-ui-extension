@@ -1,60 +1,62 @@
 import '@/style/Tooltip.css';
-import { Children, useEffect, useState } from 'react';
+import { MutableRefObject, useEffect, useRef, useState } from 'react';
 
-type Props = { children: JSX.Element[] | JSX.Element, show: boolean, parent: HTMLElement };
+type Props = {
+  children: JSX.Element[] | JSX.Element,
+  show: boolean,
+  parent: MutableRefObject<HTMLDivElement | undefined>,
+  onMove: (listener: ((ev: MouseEvent) => void)) => void
+};
 
-export function Tooltip({ children, show, parent }: Props) {
-  children = [children].flat();
+export function Tooltip({ children, show, parent, onMove }: Props) {
+  children = (() => {
+    try {
+      return [...(children as JSX.Element[])]
+    } catch (_) {
+      return [children as JSX.Element];
+    }
+  })()
+  const ref = useRef<HTMLDivElement>();
 
-  const [attributes, setAttributes] = useState<{ x: number, y: number, show: boolean }>({ x: 0, y: 0, show: false });
+  const [pos, setPos] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
 
   useEffect(() => {
     function followMouse(ev: MouseEvent) {
       try {
+        
+        // if (!show) return;
+        if (!ref.current) return;
+        if (!parent.current) return;
+        
+        console.log(parent, ref, show);
+        const bounds = parent.current.getBoundingClientRect();
+        const selfBounds = ref.current.getBoundingClientRect();
+
         console.log('MOVE');
 
-        if (!show && attributes.show) setAttributes({
-          x: attributes.x,
-          y: attributes.y,
-          show
-        });
-        if (!show) return;
-        const bounds = parent.getBoundingClientRect();
-        setAttributes({
-          x: ev.clientX - bounds.x,
-          y: ev.clientY - bounds.y,
-          show
+
+        setPos({
+          x: Math.min(ev.clientX - bounds.x, bounds.right - selfBounds.width - 20),
+          y: Math.min(ev.clientY - bounds.y, bounds.bottom - selfBounds.height - 20)
         })
-      } catch (_) { }
+      } catch (_) {
+        console.log(_);
+      }
     }
 
-    function hideTooltip(){
-      setAttributes({
-        x: attributes.x,
-        y: attributes.y,
-        show:false
-      });
-    }
+    onMove((ev) => followMouse(ev));
 
-    function showTooltip(){
-      setAttributes({
-        x: attributes.x,
-        y: attributes.y,
-        show:true
-      });
-    }
-
-    document.addEventListener('mousemove', followMouse);
-    return () => {
-      document.removeEventListener('mousemove', followMouse);
-    };
+    //   document.addEventListener('mousemove', followMouse);
+    //   return () => {
+    //     document.removeEventListener('mousemove', followMouse);
+    //   };
   });
 
 
-  return <div style={{
-    display: attributes.show ? 'block' : 'none',
-    left: attributes.x + 10 + 'px',
-    top: attributes.y + 'px'
+  return <div ref={ref as any} style={{
+    opacity: show ? '1' : '0',
+    left: pos.x + 10 + 'px',
+    top: pos.y + 10 + 'px'
   }}
     className="tooltip"
   >

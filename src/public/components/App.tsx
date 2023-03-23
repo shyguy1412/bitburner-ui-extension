@@ -20,9 +20,12 @@ export function App() {
   })
 
   return <>
-    <NetworkGraph
-      // client={client}
-      serverClicked={(path) => BitBurnerClient.connectToServer(path)}
-    ></NetworkGraph>
+    <div className='layout'>
+      <div></div>
+      <NetworkGraph
+        // client={client}
+        serverClicked={(path) => BitBurnerClient.connectToServer(path)}
+      ></NetworkGraph>
+    </div>
   </>
 }
