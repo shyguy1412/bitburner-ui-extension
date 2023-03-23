@@ -6,8 +6,8 @@
     "dev": "concurrently -k -s first \"npm run esbuild:watch:window\" \"node PayloadPackager.js w\" \"npm run esbuild:watch:bitburner\"",
     "build": "npm run esbuild:window && node PayloadPackager.js && npm run esbuild:bitburner",
     "esbuild:window": "esbuild src/public/main.tsx --target=chrome58,firefox57 --bundle --outfile=dist/ui.js",
-    "esbuild:bitburner": "esbuild src/bitburner/bitburner-ui-extension-server.ts --format=esm --bundle --outfile=bitburner/bitburner-ui-extension-server.js",
-    "esbuild:watch:bitburner": "esbuild src/bitburner/bitburner-ui-extension-server.ts --format=esm --watch --bundle --outfile=bitburner/bitburner-ui-extension-server.js",
+    "esbuild:bitburner": "esbuild src/bitburner/bitburner-ui-extension.ts --format=esm --bundle --outfile=bitburner/bitburner-ui-extension.js",
+    "esbuild:watch:bitburner": "esbuild src/bitburner/bitburner-ui-extension.ts --format=esm --watch --bundle --outfile=bitburner/bitburner-ui-extension.js",
     "esbuild:watch:window": "esbuild src/public/main.tsx --target=chrome58,firefox57 --watch --bundle --outfile=dist/ui.js"
   },
   "build": {
