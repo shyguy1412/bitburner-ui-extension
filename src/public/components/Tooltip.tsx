@@ -1,5 +1,6 @@
 import '@/style/Tooltip.css';
 import { Children, useEffect, useState } from 'react';
+import React from 'react'
 
 type Props = { children: JSX.Element[] | JSX.Element, show: boolean, parent: HTMLElement };
 
@@ -11,8 +12,6 @@ export function Tooltip({ children, show, parent }: Props) {
   useEffect(() => {
     function followMouse(ev: MouseEvent) {
       try {
-        console.log('MOVE');
-
         if (!show && attributes.show) setAttributes({
           x: attributes.x,
           y: attributes.y,

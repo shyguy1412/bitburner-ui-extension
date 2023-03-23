@@ -1,6 +1,5 @@
-import { BitBurnerClient } from "./bitburner-ui-extension-server";
 import { executeOnTerminal } from "./Terminal";
-import { NS } from "./types/NetscriptDefinitions";
+import { NS } from "../types/NetscriptDefinitions";
 
 
 export function connect(netscript: NS, params: string[]) {

@@ -1,17 +1,16 @@
-import { BitBurnerClient } from '@/lib/BitBurnerClient';
 import '@/style/NetworkGraph.css';
 import * as d3 from 'd3';
-import { LegacyRef, useEffect, useRef, useState } from 'react';
 import { Tooltip } from './Tooltip';
-
+import React from 'react';
+import { LegacyRef, useEffect, useRef, useState } from 'react';
+import { BitburnerInstance, BitburnerServer } from '@/lib/BitburnerInstance';
 
 type Props = {
   // client: BitBurnerClient
   serverClicked: (path: string[]) => void;
 }
 
-type GraphData = Awaited<ReturnType<typeof getGraphData>>;
-type ServerData = GraphData['nodes'][number];
+type GraphData = ReturnType<typeof getGraphData>;
 
 function drag(simulation: any) {
 
@@ -40,7 +39,7 @@ function drag(simulation: any) {
 }
 
 
-function getGraphData(network: Awaited<ReturnType<typeof BitBurnerClient['getNetworkData']>>) {
+function getGraphData(network: Awaited<ReturnType<typeof BitburnerInstance['getNetworkData']>>) {
 
   //filter own servers. will be displayed elsewhere cause there are potentionally way too many
   const filteredNetwork = network.filter(server => !server.purchasedByPlayer || server.hostname == 'home');
@@ -100,18 +99,24 @@ function findPathToServer(network: GraphData, target: number) {
 export function NetworkGraph({ serverClicked }: Props) {
 
   const [showTooltip, setShowTooltip] = useState<boolean>(false);
-  const [currentServerData, setCurrentServerData] = useState<ServerData>();
+  const [currentServerData, setCurrentServerData] = useState<BitburnerServer>();
   const ref = useRef<HTMLDivElement>();
 
   useEffect(() => {
     (async function () {
+      try{
 
       document.getElementById('network-graph-svg-wrapper')!.innerHTML = '';
 
-      const network = await BitBurnerClient.getNetworkData();
-      console.log(network);
+      console.log('REQUESTING');
+      
+      const network = await BitburnerInstance.getNetworkData();
+      console.log({network});
 
       const graphData = getGraphData(network);
+
+      console.log({graphData});
+
       const width = 600;
       const height = 400;
 
@@ -155,7 +160,7 @@ export function NetworkGraph({ serverClicked }: Props) {
         .data(graphData.links)
         .enter()
         .append("line")
-        .style("stroke", "var(--secondarylight)")
+        .style("stroke", "var(--primary)")
 
 
       // Initialize the nodes
@@ -173,6 +178,8 @@ export function NetworkGraph({ serverClicked }: Props) {
         .attr("cx", width / 2)
         .attr("cy", height / 2);
 
+        console.log(svg, node, link);
+      }catch(_){console.error(_)};
     })();
   }, []);
 

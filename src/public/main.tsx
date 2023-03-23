@@ -7,5 +7,6 @@ import '@/style/normalize.css'
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   // <React.StrictMode>
     <App />
+    // <div></div>
   // </React.StrictMode>,
 )

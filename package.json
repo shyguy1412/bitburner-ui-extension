@@ -1,19 +1,12 @@
 {
   "name": "bitburner-ui-extension",
   "version": "0.0.1",
-  "main": "dist/compiled/electron/main.js",
+  "main": "src/electron/main.js",
   "scripts": {
-    "dev": "concurrently -k -s first \"vite --port 3000\" \"npm run esbuild:watch:bitburner\" \"npm run electron\"",
-    "build": "npm run electron:builder",
-    "compile": "vite build && npm run tsc:electron",
-    "electron": "wait-on tcp:localhost:3000 && cross-env IS_DEV=true electron .",
-    "tsc:electron": "cd src/electron && tsc",
-    "tsc:watch:electron": "cd src/electron && tsc -w --preserveWatchOutput true",
+    "dev": "concurrently -k -s first \"electron .\" \"npm run esbuild:watch:bitburner\"",
+    "build": "",
     "esbuild:watch:bitburner": "esbuild src/bitburner/bitburner-ui-extension-server.ts --format=esm --watch --bundle --outfile=bitburner/bitburner-ui-extension-server.js",
-    "electron:builder": "electron-builder",
-    "pretsc:electron": "mkdirp dist/compiled/ -p && cp -rT ./i18n dist/compiled/i18n/",
-    "prebuild": "npm run compile",
-    "predev": "npm run tsc:electron"
+    "esbuild:watch:window": "esbuild src/public/main.tsx --target=chrome58,firefox57 --watch --bundle --outfile=dist/ui.js"
   },
   "build": {
     "files": [

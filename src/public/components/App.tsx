@@ -1,28 +1,30 @@
-import { BitBurnerClient } from '@/lib/BitBurnerClient';
+import { BitburnerInstance } from '@/lib/BitburnerInstance';
 import '@/style/App.css';
-import { useEffect } from 'react';
+import React from 'react';
 import { NetworkGraph } from './NetworkGraph';
 
 export function App() {
-  console.log(BitBurnerClient);
+  // console.log(BitBurnerClient);
+  // 
+  // useEffect(() => {
+  //   console.log('EFFECT');
 
-  useEffect(() => {
-    console.log('EFFECT');
+  //   // BitBurnerClient.on('message', ({ data }) => console.log(data));
 
-    // BitBurnerClient.on('message', ({ data }) => console.log(data));
-
-    BitBurnerClient.loadTheme();
+  BitburnerInstance.loadTheme();
 
 
-    return () => {
-      BitBurnerClient.close();
-    }
-  })
+  //   return () => {
+  //     BitBurnerClient.close();
+  //   }
+  // })
 
   return <>
+    {/* <div></div> */}
+    {/* <div>HELLO WORLD FROM REACT</div> */}
     <NetworkGraph
       // client={client}
-      serverClicked={(path) => BitBurnerClient.connectToServer(path)}
+      serverClicked={(path) => console.log(path)}
     ></NetworkGraph>
   </>
 }
