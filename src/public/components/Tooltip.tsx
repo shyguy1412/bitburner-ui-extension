@@ -2,24 +2,12 @@ import '@/style/Tooltip.css';
 import { Children, useEffect, useState } from 'react';
 import React from 'react'
 
-type Props = {
-  children: JSX.Element[] | JSX.Element,
-  show: boolean,
-  parent: MutableRefObject<HTMLDivElement | undefined>,
-  onMove: (listener: ((ev: MouseEvent) => void)) => void
-};
+type Props = { children: JSX.Element[] | JSX.Element, show: boolean, parent: HTMLElement };
 
-export function Tooltip({ children, show, parent, onMove }: Props) {
-  children = (() => {
-    try {
-      return [...(children as JSX.Element[])]
-    } catch (_) {
-      return [children as JSX.Element];
-    }
-  })()
-  const ref = useRef<HTMLDivElement>();
+export function Tooltip({ children, show, parent }: Props) {
+  children = [children].flat();
 
-  const [pos, setPos] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
+  const [attributes, setAttributes] = useState<{ x: number, y: number, show: boolean }>({ x: 0, y: 0, show: false });
 
   useEffect(() => {
     function followMouse(ev: MouseEvent) {
@@ -47,19 +35,25 @@ export function Tooltip({ children, show, parent, onMove }: Props) {
       });
     }
 
-    onMove((ev) => followMouse(ev));
+    function showTooltip(){
+      setAttributes({
+        x: attributes.x,
+        y: attributes.y,
+        show:true
+      });
+    }
 
-    //   document.addEventListener('mousemove', followMouse);
-    //   return () => {
-    //     document.removeEventListener('mousemove', followMouse);
-    //   };
+    document.addEventListener('mousemove', followMouse);
+    return () => {
+      document.removeEventListener('mousemove', followMouse);
+    };
   });
 
 
-  return <div ref={ref as any} style={{
-    opacity: show ? '1' : '0',
-    left: pos.x + 10 + 'px',
-    top: pos.y + 10 + 'px'
+  return <div style={{
+    display: attributes.show ? 'block' : 'none',
+    left: attributes.x + 10 + 'px',
+    top: attributes.y + 'px'
   }}
     className="tooltip"
   >
