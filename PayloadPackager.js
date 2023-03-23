@@ -6,8 +6,10 @@ const filename = 'ui';
 const jsfile = path.join(__dirname, 'dist', `${filename}.js`);
 const cssFile = path.join(__dirname, 'dist', `${filename}.css`);
 
-fs.watchFile(jsfile, () => package());
-fs.watchFile(cssFile, () => package());
+if(process.argv[2] == 'w'){
+  fs.watchFile(jsfile, () => package());
+  fs.watchFile(cssFile, () => package());
+}
 
 function package() {
   fs.writeFileSync(
@@ -20,3 +22,5 @@ function package() {
 function encode(string){
   return Buffer.from(fs.readFileSync(string)).toString('base64')
 }
+
+package();

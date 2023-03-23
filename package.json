@@ -3,8 +3,10 @@
   "version": "0.0.1",
   "main": "src/electron/main.js",
   "scripts": {
-    "dev": "concurrently -k -s first \"electron .\" \"npm run esbuild:watch:bitburner\"",
-    "build": "",
+    "dev": "concurrently -k -s first \"npm run esbuild:watch:window\" \"node PayloadPackager.js w\" \"npm run esbuild:watch:bitburner\"",
+    "build": "npm run esbuild:window && node PayloadPackager.js && npm run esbuild:bitburner",
+    "esbuild:window": "esbuild src/public/main.tsx --target=chrome58,firefox57 --bundle --outfile=dist/ui.js",
+    "esbuild:bitburner": "esbuild src/bitburner/bitburner-ui-extension-server.ts --format=esm --bundle --outfile=bitburner/bitburner-ui-extension-server.js",
     "esbuild:watch:bitburner": "esbuild src/bitburner/bitburner-ui-extension-server.ts --format=esm --watch --bundle --outfile=bitburner/bitburner-ui-extension-server.js",
     "esbuild:watch:window": "esbuild src/public/main.tsx --target=chrome58,firefox57 --watch --bundle --outfile=dist/ui.js"
   },
@@ -15,28 +17,19 @@
   },
   "dependencies": {
     "d3": "^7.8.2",
-    "i18next": "^21.10.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-spinners": "^0.13.8",
-    "uuid": "^9.0.0",
-    "websocket": "^1.0.34"
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@types/d3": "^7.4.0",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
     "@types/uuid": "^9.0.1",
-    "@types/websocket": "^1.0.5",
-    "@vitejs/plugin-react": "^3.1.0",
     "concurrently": "^7.6.0",
-    "cross-env": "^7.0.3",
-    "electron": "^23.1.4",
-    "electron-builder": "^24.0.0",
     "esbuild": "^0.17.12",
-    "typescript": "^5.0.2",
-    "vite": "^4.2.0",
-    "wait-on": "^7.0.1"
+    "typescript": "^5.0.2"
   },
   "author": "Nils Ramstöck",
   "description": "A Template for Electron Apps with React",
