@@ -46,6 +46,10 @@ export const BitburnerInstance = {
     return await this.sendAction({ action: 'scan-network' }) as NetworkData;
   },
 
+  connectToServer(path: string[]) {
+    this.sendAction({ action: 'connect', params: path });
+  },
+
   async loadTheme() {
     const theme = await this.sendAction({ action: 'ns-function', params: ['ui.getTheme'] }) as { [key: string]: string };
     console.log('LOADING THEME');

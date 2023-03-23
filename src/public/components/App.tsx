@@ -24,7 +24,7 @@ export function App() {
     {/* <div>HELLO WORLD FROM REACT</div> */}
     <NetworkGraph
       // client={client}
-      serverClicked={(path) => console.log(path)}
+      serverClicked={(path) => BitburnerInstance.connectToServer(path)}
     ></NetworkGraph>
   </>
 }
