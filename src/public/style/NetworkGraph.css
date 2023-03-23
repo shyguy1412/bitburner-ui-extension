@@ -1,3 +1,16 @@
+.network-graph{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+#network-graph-svg-wrapper{
+  width: 100%;
+}
+
 .network-node:hover{
   stroke: var(--white);
 }
