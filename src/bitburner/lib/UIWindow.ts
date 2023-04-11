@@ -11,8 +11,9 @@ export class UIWindow {
     this.netscript = netscript;
     this.w = w;
     this.w.addEventListener('bitburner', ({ detail }: CustomEvent) => this.messageHandler(detail));
-    this.w.addEventListener('close', () => console.log('EXIT'));
-    // netscript.atExit(() => this.window.close());
+    this.w.addEventListener('beforeunload', () => Promise.resolve().then(netscript.exit()));
+    this.w.addEventListener('beforeunload', () => console.log('EXIT'));
+    netscript.atExit(() => this.w.close());
     console.log(w);
     
   }

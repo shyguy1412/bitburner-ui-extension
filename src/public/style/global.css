@@ -2,4 +2,5 @@ body {
   background-color: var(--backgroundprimary, #000);
   color: var(--primarycolor);
   font-family: "Lucida Console", "Lucida Sans Unicode", "Fira Mono", Consolas, "Courier New", Courier, monospace, "Times New Roman";
+  overflow: hidden;
 }

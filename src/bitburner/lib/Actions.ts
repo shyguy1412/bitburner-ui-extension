@@ -2,7 +2,7 @@ import { executeOnTerminal } from "./Terminal";
 import { NS } from "../types/NetscriptDefinitions";
 
 
-export function connect(netscript: NS, params: string[]) {
+export function connectToServer(netscript: NS, params: string[]) {
   const command = params.reduce((prev, cur) => `${prev};connect ${cur}`, 'home');
   executeOnTerminal(command);
 }

@@ -27,22 +27,6 @@ export function Tooltip({ children, show, parent }: Props) {
       } catch (_) { }
     }
 
-    function hideTooltip(){
-      setAttributes({
-        x: attributes.x,
-        y: attributes.y,
-        show:false
-      });
-    }
-
-    function showTooltip(){
-      setAttributes({
-        x: attributes.x,
-        y: attributes.y,
-        show:true
-      });
-    }
-
     document.addEventListener('mousemove', followMouse);
     return () => {
       document.removeEventListener('mousemove', followMouse);
