@@ -4,9 +4,10 @@ import {App} from '@/components/App'
 import '@/style/global.css'
 import '@/style/normalize.css'
 
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  // <React.StrictMode>
+ReactDOM.createRoot(document.getElementById('bb-ui-ext-root') as HTMLElement).render(
+  // <></>
+//   // <React.StrictMode>
     <App />
-    // <div></div>
-  // </React.StrictMode>,
+//     // <div></div>
+//   // </React.StrictMode>,
 )

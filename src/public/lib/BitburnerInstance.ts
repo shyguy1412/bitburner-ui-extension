@@ -52,7 +52,7 @@ export const BitburnerInstance = {
 
   async loadTheme() {
     const theme = await this.sendAction({ action: 'ns-function', params: ['ui.getTheme'] }) as { [key: string]: string };
-    console.log('LOADING THEME');
+    // console.log('LOADING THEME');
     Object.entries(theme).forEach(([key, value]) => {
       document.body.style.setProperty(`--${key}`, value);
     })
@@ -65,7 +65,7 @@ export const BitburnerInstance = {
       const responseListener = ({ detail }: CustomEvent) => {
         const { uuid: responseID } = detail;
         if (uuid != responseID) return;
-        console.log('RESPONSE', detail);
+        // console.log('RESPONSE', detail);
 
         resolve(detail.data);
         window.removeEventListener('bitburner-response', responseListener as EventListener);

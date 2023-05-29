@@ -29,7 +29,7 @@ function drag(simulation: any) {
     if (!event.active) simulation.alphaTarget(0);
     d.fx = null;
     d.fy = null;
-    setTimeout(() => console.log('SAVE GRAPH'), 1000);
+    // setTimeout(() => console.log('SAVE GRAPH'), 1000);
   }
 
   return d3.drag()
@@ -108,14 +108,14 @@ export function NetworkGraph({ serverClicked }: Props) {
 
       document.getElementById('network-graph-svg-wrapper')!.innerHTML = '';
 
-      console.log('REQUESTING');
+      // console.log('REQUESTING');
       
       const network = await BitburnerInstance.getNetworkData();
-      console.log({network});
+      // console.log({network});
 
       const graphData = getGraphData(network);
 
-      console.log({graphData});
+      // console.log({graphData});
 
       const width = 600;
       const height = 400;
@@ -178,7 +178,7 @@ export function NetworkGraph({ serverClicked }: Props) {
         .attr("cx", width / 2)
         .attr("cy", height / 2);
 
-        console.log(svg, node, link);
+        // console.log(svg, node, link);
       }catch(_){console.error(_)};
     })();
   }, []);
