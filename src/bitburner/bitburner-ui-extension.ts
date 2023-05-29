@@ -46,8 +46,6 @@ function watchElForDeletion(elToWatch: Element, callback: () => void) {
     mutations.forEach(function (mutation) {
       // check for changes to the child list
       if (mutation.type === 'childList') {
-        console.log({ removedNodes: mutation.removedNodes });
-
         mutation.removedNodes.forEach(node => !containsRecursive(node, elToWatch) || callback());
       }
     });
