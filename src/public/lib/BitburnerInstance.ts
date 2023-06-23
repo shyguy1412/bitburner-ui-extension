@@ -47,7 +47,7 @@ export const BitburnerInstance = {
   },
 
   connectToServer(path: string[]) {
-    this.sendAction({ action: 'connectToServer', params: path });
+    this.sendAction({ action: 'connect-to-Server', params: path });
   },
 
   async loadTheme() {
